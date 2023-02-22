@@ -40,6 +40,16 @@ RUN set -eux ; \
   install-php-extensions \
     bz2 \
     zip \
+    sodium \
+    redis \
+    soap \
+    gd \
+    intl \
+    sockets \
+    memcached \
+  #  calendar \
+  #  imagick \
+  #  pcntl\
   ; \
   # install public keys for snapshot and tag validation, see https://composer.github.io/pubkeys.html
   curl \
@@ -96,9 +106,3 @@ COPY --from=binary-with-runtime /usr/bin/composer /composer
 
 # This is defined as last target to be backward compatible with build without explicit --target option
 FROM binary-with-runtime AS default
-
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-
-RUN chmod +x /usr/local/bin/install-php-extensions
-
-RUN install-php-extensions zip sodium redis
