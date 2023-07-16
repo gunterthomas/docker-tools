@@ -42,6 +42,6 @@ COPY ./config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY ./config/site.conf /etc/nginx/sites-available/default
 COPY ./index.php /www/index.php
 
-WORKDIR /
+WORKDIR /var/www
 
 CMD ["/usr/bin/supervisord"]
