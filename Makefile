@@ -6,6 +6,10 @@ php:
 	cd php && docker buildx build --build-arg UID=1000 --build-arg GID=1000 --platform linux/amd64,linux/arm64 -t gunterthomas/php:7.4 --push --file Dockerfile_74 .
 .PHONY: php
 
+php81:
+	cd php && docker buildx build --build-arg UID=1000 --build-arg GID=1000 --platform linux/amd64,linux/arm64 -t gunterthomas/php:8.1 --push --file Dockerfile_81 .
+.PHONY: php81
+
 gearman:
 	cd gearman-job-server && docker buildx build --platform linux/amd64,linux/arm64 -t gunterthomas/gearman-job-server:latest --push .
 .PHONY: gearman
