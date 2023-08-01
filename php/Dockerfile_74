@@ -34,7 +34,8 @@ COPY ./config/conf.d/20-memorylimit.ini /etc/php/7.4/cli/conf.d/20-memorylimit.i
 COPY ./config/conf.d/20-timezone.ini /etc/php/7.4/cli/conf.d/20-timezone.ini
 RUN unlink /etc/php/7.4/cli/conf.d/20-xdebug.ini
 
-COPY ./config/pool.d/php74.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY ./config/pool.d/php74.conf /etc/php/7.4/fpm/php-fpm.conf
+RUN update-alternatives --install /usr/bin/php-fpm php-fpm /usr/sbin/php-fpm7.4 20
 
 RUN apt-get clean
 
