@@ -2,6 +2,10 @@ composer:
 	cd composer && docker buildx build --platform linux/amd64,linux/arm64 -t gunterthomas/composer:2.0.8 --push . && cd ..
 .PHONY: composer
 
+composer81:
+	cd composer && docker buildx build --platform linux/amd64,linux/arm64 -t gunterthomas/composer:2.4.3 --push --file Dockerfile_81 . && cd ..
+.PHONY: composer81
+
 php:
 	cd php && docker buildx build --build-arg UID=1000 --build-arg GID=1000 --platform linux/amd64,linux/arm64 -t gunterthomas/php:7.4 --push --file Dockerfile_74 .
 .PHONY: php
