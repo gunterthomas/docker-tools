@@ -39,6 +39,9 @@ RUN update-alternatives --install /usr/bin/php-fpm php-fpm /usr/sbin/php-fpm7.4 
 
 RUN apt-get clean
 
+RUN mkdir -p /var/lib/php/session
+RUN chmod 777 -R /var/lib/php/session
+
 COPY ./config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY ./config/site.conf /etc/nginx/sites-available/default
 COPY ./index.php /www/index.php
