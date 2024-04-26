@@ -47,6 +47,7 @@ RUN set -eux ; \
     intl \
     sockets \
     memcached \
+    grpc \
   #  calendar \
   #  imagick \
   #  pcntl\
