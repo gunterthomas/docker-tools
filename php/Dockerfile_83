@@ -1,0 +1,51 @@
+FROM debian:bullseye-slim
+
+ARG UID
+ARG GID
+
+RUN usermod --non-unique --uid ${UID} www-data
+RUN groupmod --non-unique --gid ${GID} www-data
+
+RUN apt-get update
+
+RUN apt-get install -y locales locales-all
+ENV LANG de_DE.UTF-8
+ENV LANGUAGE de_DE:en
+ENV LC_ALL de_DE.UTF-8
+ENV TZ "Europe/Berlin"
+
+RUN apt-get install -y curl gnupg2 htop nano wget zip ssh nginx supervisor
+RUN apt-get install -y libzip-dev libxml2-dev libgearman8 libgearman-dev lsb-release apt-transport-https ca-certificates gnupg
+
+RUN curl -sSLo /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg
+RUN sh -c 'echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'
+RUN apt-get update
+
+RUN apt-get install -y php8.3-fpm php8.3-curl php8.3-zip php8.3-dev php8.3-gd php8.3-gearman php8.3-imagick \
+    php8.3-mbstring php8.3-memcached php8.3-intl php8.3-cli php8.3-soap php8.3-calendar \
+    php8.3-mysql php8.3-mysqli php8.3-pdo php8.3-xdebug php8.3-xml php8.3-redis \
+    php8.3-grpc php8.3-bcmath php8.3-opcache
+
+COPY ./config/conf.d/20-xdebug.ini /etc/php/8.3/fpm/conf.d/20-xdebug.ini
+COPY ./config/conf.d/20-timezone.ini /etc/php/8.3/fpm/conf.d/20-timezone.ini
+COPY ./config/conf.d/20-memorylimit.ini /etc/php/8.3/fpm/conf.d/20-memorylimit.ini
+COPY ./config/conf.d/20-xdebug-cli.ini /etc/php/8.3/cli/conf.d/20-xdebug-cli.ini
+COPY ./config/conf.d/20-memorylimit.ini /etc/php/8.3/cli/conf.d/20-memorylimit.ini
+COPY ./config/conf.d/20-timezone.ini /etc/php/8.3/cli/conf.d/20-timezone.ini
+RUN unlink /etc/php/8.3/cli/conf.d/20-xdebug.ini
+
+COPY ./config/pool.d/php83.conf /etc/php/8.3/fpm/php-fpm.conf
+RUN update-alternatives --install /usr/bin/php-fpm php-fpm /usr/sbin/php-fpm8.3 20
+
+RUN apt-get clean
+
+RUN mkdir -p /var/lib/php/session
+RUN chmod 777 -R /var/lib/php/session
+
+COPY ./config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./config/site.conf /etc/nginx/sites-available/default
+COPY ./index.php /www/index.php
+
+WORKDIR /var/www
+
+CMD ["/usr/bin/supervisord"]
