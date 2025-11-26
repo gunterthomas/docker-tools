@@ -7,7 +7,7 @@ composer81:
 .PHONY: composer81
 
 composer83:
-	cd composer && docker buildx build --platform linux/amd64,linux/arm64 -t gunterthomas/composer:2.7.7 --push --file Dockerfile_83 . && cd ..
+	cd composer && docker buildx build --platform linux/amd64,linux/arm64 -t gunterthomas/composer:2.8.3 --push --file Dockerfile_83 . && cd ..
 .PHONY: composer83
 
 php:
@@ -25,6 +25,10 @@ php81:
 php83:
 	cd php && docker buildx build --build-arg UID=1000 --build-arg GID=1000 --platform linux/amd64,linux/arm64 -t gunterthomas/php:8.3 --push --file Dockerfile_83 .
 .PHONY: php83
+
+php8328:
+	cd php && docker buildx build --build-arg UID=1000 --build-arg GID=1000 --platform linux/amd64,linux/arm64 -t gunterthomas/php:8.3.28 --push --file Dockerfile_83 .
+.PHONY: php8328
 
 gearman:
 	cd gearman-job-server && docker buildx build --platform linux/amd64,linux/arm64 -t gunterthomas/gearman-job-server:latest --push .
